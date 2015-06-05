@@ -32,7 +32,7 @@ var MyStoreWithKey = (function (_Store2) {
   function MyStoreWithKey(flux) {
     _classCallCheck(this, MyStoreWithKey);
 
-    _get(Object.getPrototypeOf(MyStoreWithKey.prototype), 'constructor', this).call(this, flux, 'abc');
+    _get(Object.getPrototypeOf(MyStoreWithKey.prototype), 'constructor', this).call(this, flux, { key: 'abc' });
   }
 
   _inherits(MyStoreWithKey, _Store2);
@@ -44,7 +44,7 @@ var MyStoreWithInitialState = (function (_Store3) {
   function MyStoreWithInitialState(flux) {
     _classCallCheck(this, MyStoreWithInitialState);
 
-    _get(Object.getPrototypeOf(MyStoreWithInitialState.prototype), 'constructor', this).call(this, flux, { foo: 'bar' });
+    _get(Object.getPrototypeOf(MyStoreWithInitialState.prototype), 'constructor', this).call(this, flux, { initialState: { foo: 'bar' } });
   }
 
   _inherits(MyStoreWithInitialState, _Store3);
@@ -56,7 +56,7 @@ var MyStoreWithKeyAndInitialState = (function (_Store4) {
   function MyStoreWithKeyAndInitialState(flux) {
     _classCallCheck(this, MyStoreWithKeyAndInitialState);
 
-    _get(Object.getPrototypeOf(MyStoreWithKeyAndInitialState.prototype), 'constructor', this).call(this, flux, 'abc', { foo: 'bar' });
+    _get(Object.getPrototypeOf(MyStoreWithKeyAndInitialState.prototype), 'constructor', this).call(this, flux, { key: 'abc', initialState: { foo: 'bar' } });
   }
 
   _inherits(MyStoreWithKeyAndInitialState, _Store4);

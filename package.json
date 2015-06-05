@@ -1,6 +1,6 @@
 {
   "name": "flummox-localstore",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Flummox Store extension that automatically syncs Store state to localStorage.",
   "main": "index.js",
   "dependencies": {
@@ -12,8 +12,9 @@
     "mock-local-storage": "^1.0.2"
   },
   "scripts": {
-    "test": "babel test.es6 -o test.js && mocha -r mock-local-storage test.js",
-    "build": "babel index.es6 -o index.js"
+    "pretest": "babel test.es6 -o test.js && babel index.es6 -o index.js",
+    "test": "mocha -r mock-local-storage test.js",
+    "prepublish": "babel index.es6 -o index.js"
   },
   "repository": {
     "type": "git",

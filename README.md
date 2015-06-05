@@ -59,11 +59,6 @@ class MyStore extends Store {
 
 ## Developing
 
-This project was written in es6 (```index.es6```). To compile the
-project for publishing:
-
-    npm build
-
 The tests were written also in es6 (```test.es6```). To run the tests:
 
     npm test

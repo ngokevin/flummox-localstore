@@ -2,24 +2,22 @@ import {Store} from 'flummox';
 
 
 export default class FlummoxLocalStore extends Store {
-  constructor(flux, arg1, arg2) {
+  constructor(flux, opts) {
+    /* opts:
+       initialState -- initialState, overwritten by localStorage data.
+       serializer -- transform function run on state going into localStorage.
+       key -- localStorage key.
+    */
     super();
     const root = this;
+    opts = opts || {};
 
-    // Polymorphic arguments. Allow [key, state] or [state].
-    let keyArg;
-    this.state = {};
-    if (arg1 && arg1.constructor === String) {
-      keyArg = arg1;
-      this.state = arg2 || {};
-    } else if (arg1 && arg1.constructor === Object) {
-      this.state = arg1;
-    } else {
-      this.state = {};
-    }
+    // Infer the key.
+    let key = opts.key || root.constructor.name;
+    this._localStorageKey = key;
 
-    // Deduce the key.
-    let key = keyArg || root.constructor.name;
+    // Set initial state.
+    this.state = opts.initialState || {};
 
     // Initialize state from localStorage.
     let store = localStorage.getItem(key);
@@ -28,7 +26,7 @@ export default class FlummoxLocalStore extends Store {
         const parsedStore = JSON.parse(store);
         if (!!parsedStore && parsedStore.constructor === Object) {
           // Update state without triggering change.
-          this.state = setState(this.state, parsedStore);
+          this.state = setInitialState(this.state, parsedStore);
         }
       } catch (e) {
         console.log(e);
@@ -37,7 +35,12 @@ export default class FlummoxLocalStore extends Store {
 
     // Add listener to sync localStorage on change.
     root.addListener('change', () => {
-      localStorage.setItem(key, JSON.stringify(this.state));
+      let state = this.state;
+      if (opts.serializer && opts.serializer.constructor) {
+        // Run serializer over data.
+        state = opts.serializer(state);
+      }
+      localStorage.setItem(key, JSON.stringify(state));
     });
 
     return this;
@@ -45,7 +48,7 @@ export default class FlummoxLocalStore extends Store {
 }
 
 
-function setState(objA, objB) {
+function setInitialState(objA, objB) {
   for (var key in objB) {
     objA[key] = objB[key];
   }

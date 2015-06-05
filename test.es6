@@ -12,21 +12,21 @@ class MyStore extends Store {
 
 class MyStoreWithKey extends Store {
   constructor(flux) {
-    super(flux, 'abc');
+    super(flux, {key: 'abc'});
   }
 }
 
 
 class MyStoreWithInitialState extends Store {
   constructor(flux) {
-    super(flux, {foo: 'bar'});
+    super(flux, {initialState: {foo: 'bar'}});
   }
 }
 
 
 class MyStoreWithKeyAndInitialState extends Store {
   constructor(flux) {
-    super(flux, 'abc', {foo: 'bar'});
+    super(flux, {key: 'abc', initialState: {foo: 'bar'}});
   }
 }
 

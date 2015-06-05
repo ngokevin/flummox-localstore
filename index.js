@@ -13,28 +13,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 var _flummox = require('flummox');
 
 var FlummoxLocalStore = (function (_Store) {
-  function FlummoxLocalStore(flux, arg1, arg2) {
+  function FlummoxLocalStore(flux, opts) {
     var _this = this;
 
     _classCallCheck(this, FlummoxLocalStore);
 
+    /* opts:
+       initialState -- initialState, overwritten by localStorage data.
+       serializer -- transform function run on state going into localStorage.
+       key -- localStorage key.
+    */
     _get(Object.getPrototypeOf(FlummoxLocalStore.prototype), 'constructor', this).call(this);
     var root = this;
+    opts = opts || {};
 
-    // Polymorphic arguments. Allow [key, state] or [state].
-    var keyArg = undefined;
-    this.state = {};
-    if (arg1 && arg1.constructor === String) {
-      keyArg = arg1;
-      this.state = arg2 || {};
-    } else if (arg1 && arg1.constructor === Object) {
-      this.state = arg1;
-    } else {
-      this.state = {};
-    }
+    // Infer the key.
+    var key = opts.key || root.constructor.name;
+    this._localStorageKey = key;
 
-    // Deduce the key.
-    var key = keyArg || root.constructor.name;
+    // Set initial state.
+    this.state = opts.initialState || {};
 
     // Initialize state from localStorage.
     var store = localStorage.getItem(key);
@@ -43,7 +41,7 @@ var FlummoxLocalStore = (function (_Store) {
         var parsedStore = JSON.parse(store);
         if (!!parsedStore && parsedStore.constructor === Object) {
           // Update state without triggering change.
-          this.state = setState(this.state, parsedStore);
+          this.state = setInitialState(this.state, parsedStore);
         }
       } catch (e) {
         console.log(e);
@@ -52,7 +50,12 @@ var FlummoxLocalStore = (function (_Store) {
 
     // Add listener to sync localStorage on change.
     root.addListener('change', function () {
-      localStorage.setItem(key, JSON.stringify(_this.state));
+      var state = _this.state;
+      if (opts.serializer && opts.serializer.constructor) {
+        // Run serializer over data.
+        state = opts.serializer(state);
+      }
+      localStorage.setItem(key, JSON.stringify(state));
     });
 
     return this;
@@ -65,7 +68,7 @@ var FlummoxLocalStore = (function (_Store) {
 
 exports['default'] = FlummoxLocalStore;
 
-function setState(objA, objB) {
+function setInitialState(objA, objB) {
   for (var key in objB) {
     objA[key] = objB[key];
   }
