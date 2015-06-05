@@ -31,6 +31,27 @@ class MyStoreWithKeyAndInitialState extends Store {
 }
 
 
+class MyStoreWithSerializer extends Store {
+  constructor(flux) {
+    const serializer = state => {
+      delete state.foo;
+      return state;
+    };
+    super(flux, {serializer: serializer});
+  }
+}
+
+
+class MyStoreWithBadSerializer extends Store {
+  constructor(flux) {
+    const serializer = state => {
+      return undefined;
+    };
+    super(flux, {serializer: serializer});
+  }
+}
+
+
 beforeEach(() => {
   localStorage.clear();
 });
@@ -93,5 +114,19 @@ describe('FlummoxLocalStore', () => {
     localStorage.setItem('abc', JSON.stringify({bar: 'baz'}));
     const store = new MyStoreWithKeyAndInitialState();
     assert.deepEqual(store.state, {foo: 'bar', bar: 'baz'});
+  });
+
+  it('takes serialize function', () => {
+    const store = new MyStoreWithSerializer();
+    store.setState({foo: 'bar', baz: 'qux'});
+    assert.deepEqual(JSON.parse(localStorage.getItem('MyStoreWithSerializer')),
+                     {baz: 'qux'});
+  });
+
+  it('handles bad serializer', () => {
+    const store = new MyStoreWithBadSerializer();
+    assert.throws(() => {
+      store.setState({foo: 'bar'});
+    });
   });
 });

@@ -39,6 +39,10 @@ export default class FlummoxLocalStore extends Store {
       if (opts.serializer && opts.serializer.constructor) {
         // Run serializer over data.
         state = opts.serializer(state);
+        if (!(!!state && state.constructor === Object)) {
+            // Not an object.
+            throw 'Serialized state not an object.';
+        }
       }
       localStorage.setItem(key, JSON.stringify(state));
     });

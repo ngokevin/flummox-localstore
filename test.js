@@ -64,6 +64,37 @@ var MyStoreWithKeyAndInitialState = (function (_Store4) {
   return MyStoreWithKeyAndInitialState;
 })(_index2['default']);
 
+var MyStoreWithSerializer = (function (_Store5) {
+  function MyStoreWithSerializer(flux) {
+    _classCallCheck(this, MyStoreWithSerializer);
+
+    var serializer = function serializer(state) {
+      delete state.foo;
+      return state;
+    };
+    _get(Object.getPrototypeOf(MyStoreWithSerializer.prototype), 'constructor', this).call(this, flux, { serializer: serializer });
+  }
+
+  _inherits(MyStoreWithSerializer, _Store5);
+
+  return MyStoreWithSerializer;
+})(_index2['default']);
+
+var MyStoreWithBadSerializer = (function (_Store6) {
+  function MyStoreWithBadSerializer(flux) {
+    _classCallCheck(this, MyStoreWithBadSerializer);
+
+    var serializer = function serializer(state) {
+      return undefined;
+    };
+    _get(Object.getPrototypeOf(MyStoreWithBadSerializer.prototype), 'constructor', this).call(this, flux, { serializer: serializer });
+  }
+
+  _inherits(MyStoreWithBadSerializer, _Store6);
+
+  return MyStoreWithBadSerializer;
+})(_index2['default']);
+
 beforeEach(function () {
   localStorage.clear();
 });
@@ -121,5 +152,18 @@ describe('FlummoxLocalStore', function () {
     localStorage.setItem('abc', JSON.stringify({ bar: 'baz' }));
     var store = new MyStoreWithKeyAndInitialState();
     _assert2['default'].deepEqual(store.state, { foo: 'bar', bar: 'baz' });
+  });
+
+  it('takes serialize function', function () {
+    var store = new MyStoreWithSerializer();
+    store.setState({ foo: 'bar', baz: 'qux' });
+    _assert2['default'].deepEqual(JSON.parse(localStorage.getItem('MyStoreWithSerializer')), { baz: 'qux' });
+  });
+
+  it('handles bad serializer', function () {
+    var store = new MyStoreWithBadSerializer();
+    _assert2['default'].throws(function () {
+      store.setState({ foo: 'bar' });
+    });
   });
 });

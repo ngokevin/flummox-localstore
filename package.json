@@ -1,6 +1,6 @@
 {
   "name": "flummox-localstore",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Flummox Store extension that automatically syncs Store state to localStorage.",
   "main": "index.js",
   "dependencies": {
