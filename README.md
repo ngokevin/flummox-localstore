@@ -28,15 +28,17 @@ state from localStorage (deserializing it if possible).
 ## Configuring Initial State
 
 By default, flummox-localstore will set your store's initial state to an empty
-object```{}``` for you. You can pass in an object representing your desired
-initial state into your store's constructor's ```super()``` call.
+object```{}``` for you. You can set the ```initialState``` opt in your your
+store's constructor's ```super()``` call as ```initialState```.
 
 ```js
 import Store from 'flummox-localstore';
 
 class MyStore extends Store {
   constructor(flux) {
-    super(flux, {foo: 'bar'});
+    super(flux, {
+      initialState: {foo: 'bar'}
+    });
   }
 }
 ```
@@ -44,15 +46,39 @@ class MyStore extends Store {
 ## Configuring localStorage Key
 
 By default, the localStorage key is inferred from your Store's classname.
-However, you can set a custom localStorage key by passing it into your store's
-constructor's ```super()``` call.
+However, you can set a custom localStorage key by setting the ```key``` opt in
+your constructor's ```super()``` call.
 
 ```js
 import Store from 'flummox-localstore';
 
 class MyStore extends Store {
   constructor(flux) {
-    super(flux, 'my-custom-ls-key', {foo: 'bar'});
+    super(flux, {
+      key: 'my-custom-ls-key'
+    });
+  }
+}
+```
+
+## Configuring localStorage Serializer
+
+You can pass in a function that transforms or serializes your store's state
+before syncing it to localStorage. This can help you to control what is stored
+in localStorage and what isn't. You can set a serializer function by setting
+the ```serializer``` opt in your store's constructor's ```super()``` call.
+
+```js
+import Store from 'flummox-localstore';
+
+class MyStore extends Store {
+  constructor(flux) {
+    super(flux, {
+      serializer: state => {
+        delete state.sessionKey;
+        return state;
+      }
+    });
   }
 }
 ```
