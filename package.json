@@ -1,0 +1,37 @@
+{
+  "name": "flummox-localstore",
+  "version": "1.0.0",
+  "description": "Flummox Store extension that automatically syncs Store state to localStorage.",
+  "main": "index.js",
+  "dependencies": {
+    "babel": "^5.4.7",
+    "flummox": "^3.5.2"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "mock-local-storage": "^1.0.2"
+  },
+  "scripts": {
+    "test": "babel test.es6 -o test.js && mocha -r mock-local-storage test.js",
+    "build": "babel index.es6 -o index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ngokevin/flummox-localstore"
+  },
+  "keywords": [
+    "flummox",
+    "store",
+    "localstorage",
+    "localstore",
+    "flux",
+    "sync",
+    "state"
+  ],
+  "author": "Kevin Ngo <me@ngokevin.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngokevin/flummox-localstore/issues"
+  },
+  "homepage": "https://github.com/ngokevin/flummox-localstore"
+}
